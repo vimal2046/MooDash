@@ -1,0 +1,37 @@
+<h1>My Courses</h1>
+
+@if (loading) {
+    <p>Loading...</p>
+}@else if (error) {
+    <p>{{error}}</p>
+}
+@else {
+   <div class="course-grid">
+    @for (c of courses; track c.id) {
+        <div class="course-card">
+            <!-- <img 
+                class="course-image"
+                [src]="c.overviewfiles?.length ? (c.overviewfiles[0].fileurl + '?token=' + token) : 'images/course.jpg'"
+                 alt="Course Image"
+                 /> -->
+                 <!-- <img 
+                class="course-image"
+                [src]="c.courseimage ? (c.courseimage + '?token=' + token) : 'images/course.jpg'"
+                alt="{{c.fullname}}"
+                /> -->
+                <img 
+                class="course-image"
+                [src]="c.courseimage ? (c.courseimage + '?token=' + token) : 'assets/images/course.jpg'"
+                alt="{{c.fullname}}"
+                (error)="onImageError($event)"
+                />
+
+        <div class="course-content">
+            <h2>{{c.fullname}}</h2>
+            <p>{{getTrimmedSummary(c.summary) || 'No description available.'}}</p>
+            <button class="open-btn">Open</button>
+        </div>
+        </div>
+    }
+   </div>
+}

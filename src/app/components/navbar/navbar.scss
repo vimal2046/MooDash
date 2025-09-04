@@ -1,0 +1,31 @@
+.navbar{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #1976d2;
+    padding: 10px 20px;
+    color: white;
+    height: 60px;
+
+
+    a {
+        margin-right: 20px;
+        text-decoration: none;
+        color: white;
+        font-weight: 500;
+    }
+
+    .profile-icon{
+        width: 40px;
+        height: 40px;
+        border: 50%;
+        object-fit: cover;
+        border-radius: 15px ;
+    }
+
+    .active{
+        font-weight: bold;
+        color: #ffffff;
+        border-bottom: 2px solid white;
+    }
+}

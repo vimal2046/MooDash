@@ -1,0 +1,28 @@
+<div class="profile-container" >
+    @if(!loading && user){
+    <img
+        class="profile-pic"
+        [src]="user.profileimageurl || 'images/profile.jpg'"
+        alt="{{user.fullname}}"
+        (error)="onImageError($event)"
+        />
+        <h2>{{user.fullname}}</h2>
+        <p>Email: {{user.email}}</p>
+        @if (user.city) {
+      <p>City: {{ user.city }}</p>
+    }
+       @if (user.country) {
+      <p>Country: {{ user.country }}</p>
+    }
+     @if (user.lastaccess) { <p>Last access: {{ user.lastaccess * 1000 | date:'medium' }}</p> }
+
+}
+    
+</div>
+  @if (loading) {
+    <div>Loading profile...</div>
+  }
+
+  @if (error) {
+    <div>{{ error }}</div>
+  }

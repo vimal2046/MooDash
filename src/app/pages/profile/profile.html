@@ -15,9 +15,13 @@
       <p>Country: {{ user.country }}</p>
     }
      @if (user.lastaccess) { <p>Last access: {{ user.lastaccess * 1000 | date:'medium' }}</p> }
-
+         <p>Language: {{user.lang}}</p>
+     @if (user.firstaccess) { <p>First access: {{ user.firstaccess * 1000 | date:'medium' }}</p> }
+         
+      <p>Id: {{user.id}}</p>
+         <p>Add: {{user.address}}</p>
 }
-    
+    <!-- <button (click)="enableEdit = true">Edit Profile</button> -->
 </div>
   @if (loading) {
     <div>Loading profile...</div>

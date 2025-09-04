@@ -5,7 +5,7 @@
     </div>
     <div class="nav-right">
         <a routerLink="/profile" routerLinkActive="active">
-            <img src="images/profile.jpg" alt="Profile" class="profile-icon">
+            <img [src]="profileImage" alt="Profile" class="profile-icon" (error)="profileImage = 'images/profile.jpg'"/>
         </a>
     </div>
 </nav>

@@ -38,6 +38,7 @@ export class Profile implements OnInit {
     this.moodle.getUserProfile(userId).subscribe({
       next: (data) => {
         this.user = Array.isArray(data) ? data[0] : data;
+        this.userService.setProfileImage(this.user?.profileimageurl || null); // update service
         this.loading = false;
       },
       error: (err) => {
@@ -51,4 +52,5 @@ export class Profile implements OnInit {
   onImageError(event: Event) {
     (event.target as HTMLImageElement).src = 'images/profile.jpg';
   }
+  
 }

@@ -12,7 +12,7 @@ import { User } from './services/user';
 })
 export class App implements OnInit {
   // Temporary hardcoded user ID for testing
-  private testUserId = 3;
+  private testUserId = 4;
 
   constructor(private moodle: Moodle, private userService: User) {}
 

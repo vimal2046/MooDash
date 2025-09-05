@@ -15,9 +15,10 @@ export class Courses implements OnInit {
   courses: any[] = [];
   loading = true;
   error = '';
-
+//Injected User to constructor
   constructor(private userService: User) {}
 
+  //ngOnInit() runs once
   ngOnInit() {
     // Fetch immediately if a userId already exists
     const currentUserId = this.userService.getUserId();

@@ -6,25 +6,37 @@ import { User } from './services/user';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet,Navbar],
+  imports: [RouterOutlet, Navbar], // Root component includes RouterOutlet and Navbar
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })
 export class App implements OnInit {
+  // Temporary hardcoded user ID for testing
   private testUserId = 3;
-  constructor (private moodle:Moodle, private userService:User){}
-  ngOnInit(){
-      this.moodle.getSiteInfo().subscribe({
-        next: (info) => {
-          console.log("Site Info", info);
-         // this.userService.setUserId(info.userid);//set global userId
-         this.userService.setUserId(this.testUserId);
-          this.userService.setProfileImage(info.userpictureurl); // set global image
-        },
-        error:(err)=>{
-          console.error("Failed to fetch site info:", err);
-        }
-      })
+
+  constructor(private moodle: Moodle, private userService: User) {}
+
+  ngOnInit() {
+    // Fetch site information from Moodle when the app starts
+    this.moodle.getSiteInfo().subscribe({
+      next: (info) => {
+        console.log("Site Info", info);
+
+        // Normally, we would set the logged-in user's ID
+        // this.userService.setUserId(info.userid);
+
+        // For testing purposes, override with fixed ID (2)
+        this.userService.setUserId(this.testUserId);
+
+        // Store the profile image globally so other components can access it
+        this.userService.setProfileImage(info.userpictureurl);
+      },
+      error: (err) => {
+        console.error("Failed to fetch site info:", err);
+      }
+    });
   }
+
+  // Angular signal for reactivity (used here for the application title)
   protected readonly title = signal('MooDash');
 }

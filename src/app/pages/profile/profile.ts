@@ -2,10 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { Moodle } from '../../services/moodle';
 import { User } from '../../services/user';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-profile',
-  imports: [DatePipe],
+  imports: [DatePipe,FormsModule],
   templateUrl: './profile.html',
   styleUrl: './profile.scss'
 })
@@ -52,5 +53,12 @@ export class Profile implements OnInit {
   onImageError(event: Event) {
     (event.target as HTMLImageElement).src = 'images/profile.jpg';
   }
+
+  enableEdit = false; // default view-only mode
+
+toggleEdit() {
+  this.enableEdit = !this.enableEdit;
+}
+
   
 }

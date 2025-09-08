@@ -1,32 +1,212 @@
-<div class="profile-container" >
-    @if(!loading && user){
-    <img
+<div class="profile-page-container">
+
+  @if (loading) {
+    <div class="skeleton-loader">
+      <div class="skeleton-hero">
+        <div class="skeleton-avatar"></div>
+        <div class="skeleton-text-group">
+          <div class="skeleton-line-long"></div>
+          <div class="skeleton-line-short"></div>
+        </div>
+      </div>
+      <div class="skeleton-body">
+        <div class="skeleton-main-content">
+          <div class="skeleton-card"></div>
+          <div class="skeleton-card"></div>
+        </div>
+        <div class="skeleton-sidebar">
+          <div class="skeleton-card"></div>
+        </div>
+      </div>
+    </div>
+  }
+
+  @if (!loading && user) {
+    <header class="profile-hero">
+      <img
         class="profile-pic"
         [src]="user.profileimageurl || 'images/profile.jpg'"
-        alt="{{user.fullname}}"
+        alt="{{ user.fullname }}"
         (error)="onImageError($event)"
-        />
-        <h2>{{user.fullname}}</h2>
-        <p>Email: {{user.email}}</p>
-        @if (user.city) {
-      <p>City: {{ user.city }}</p>
-    }
-       @if (user.country) {
-      <p>Country: {{ user.country }}</p>
-    }
-     @if (user.lastaccess) { <p>Last access: {{ user.lastaccess * 1000 | date:'medium' }}</p> }
-         <p>Language: {{user.lang}}</p>
-     @if (user.firstaccess) { <p>First access: {{ user.firstaccess * 1000 | date:'medium' }}</p> }
-         
-      <p>Id: {{user.id}}</p>
-         <p>Add: {{user.address}}</p>
-}
-    <!-- <button (click)="enableEdit = true">Edit Profile</button> -->
-</div>
-  @if (loading) {
-    <div>Loading profile...</div>
+      />
+      <div class="profile-intro">
+        <h1>{{ user.fullname }}</h1>
+        <p class="username">@{{ user.username }}</p>
+        <span class="user-id">ID: {{ user.id }}</span>
+      </div>
+          <button class="edit-profile-btn" (click)="toggleEdit()">
+      <span class="material-symbols-outlined">edit</span>
+      {{ enableEdit ? 'Cancel' : 'Edit Profile' }}
+    </button>
+
+    </header>
+
+    <main class="profile-body">
+      <div class="main-content">
+        <section class="info-card">
+          <h2>About Me</h2>
+          @if (!enableEdit) {
+
+          
+         <div class="description" [innerHTML]="user.description || 'No description provided.'"></div>
+          }
+          @if (enableEdit) {
+            <input type="text" [(ngModel)]="user.description">
+          }
+          @if (user.interests) {
+            <h3>Interests</h3>
+            <div class="interests-container">
+                @for(interest of user.interests.split(','); track interest) {
+                    <span class="interest-tag">{{ interest.trim() }}</span>
+                }
+            </div>
+          }
+        </section>
+
+        <section class="info-card">
+          <h2>Account Details</h2>
+          <div class="info-grid">
+            <div class="info-item">
+              <span class="material-symbols-outlined icon">language</span>
+              <div>
+                <strong>Language:</strong>
+                <p>{{ user.lang }}</p>
+              </div>
+            </div>
+            <div class="info-item">
+              <span class="material-symbols-outlined icon">schedule</span>
+              <div>
+                <strong>Timezone:</strong>
+                <p>{{ user.timezone }}</p>
+              </div>
+            </div>
+            <div class="info-item">
+              <span class="material-symbols-outlined icon">login</span>
+              <div>
+                <strong>First Access:</strong>
+                <p>{{ user.firstaccess * 1000 | date:'longDate' }} at {{ user.firstaccess * 1000 | date:'shortTime' }}</p>
+              </div>
+            </div>
+            <div class="info-item">
+              <span class="material-symbols-outlined icon">logout</span>
+              <div>
+                <strong>Last Access:</strong>
+                <p>{{ user.lastaccess * 1000 | date:'longDate' }} at {{ user.lastaccess * 1000 | date:'shortTime' }}</p>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <aside class="sidebar">
+        <section class="info-card">
+          <h2>Contact Information</h2>
+          <div class="info-list">
+            <div class="info-item">
+              <span class="material-symbols-outlined icon">mail</span>
+              <div>
+                <strong>Email:</strong>
+                @if (!enableEdit){
+                <p>{{ user.email }}</p>
+                }
+                @if (enableEdit){
+                  <input type="email" [(ngModel)] = "user.email"/>
+                }
+              </div>
+            </div>
+            <div class="info-item">
+              <span class="material-symbols-outlined icon">call</span>
+              <div>
+                <strong>Phone 1:</strong>
+                @if(!enableEdit){
+                  <p>{{ user.phone1 || 'Not Provided' }}</p>
+                }
+                @if(enableEdit){
+                  <input type="number" [(ngModel)]="user.phone1"/>
+                }
+                
+              </div>
+            </div>
+            <div class="info-item">
+              <span class="material-symbols-outlined icon">phone_enabled</span>
+              <div>
+                
+                <strong>Phone 2:</strong>
+                @if(!enableEdit){
+                <p>{{ user.phone2 || 'Not Provided' }}</p>
+                }
+                @if(enableEdit){
+                  <input type="number" [(ngModel)]="user.phone2">
+                }
+              </div>
+            </div>
+            <div class="info-item">
+              <span class="material-symbols-outlined icon">home</span>
+              <div>
+                <strong>Address:</strong>
+                <p>{{ user.address }}, {{ user.city }}, {{ user.country }}</p>
+                @if (!enableEdit) {
+                  <p>{{user.address}}</p>
+                }
+                @if (enableEdit) {
+                  <input type="text" [(ngModel)]="user.address">
+                }
+                <strong>City:</strong>
+                @if (!enableEdit) {
+                  <p>{{user.city}}</p>
+                }
+                @if (enableEdit) {
+                  <input type="text" [(ngModel)]="user.city">
+                }
+                <strong>Country:</strong>
+                @if (!enableEdit) {
+                  <p>{{user.country}}</p>
+                }
+                @if (enableEdit) {
+                  <input type="text" [(ngModel)]="user.country">
+                }
+                
+
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="info-card">
+          <h2>Organization</h2>
+          <div class="info-list">
+            <div class="info-item">
+              <span class="material-symbols-outlined icon">corporate_fare</span>
+              <div>
+                <strong>Institution:</strong>
+                @if (!enableEdit) {
+                   <p>{{ user.institution }}</p>
+                }
+                @if (enableEdit) {
+                  <input type="text" [(ngModel)]="user.institution">
+                }
+               
+              </div>
+            </div>
+            <div class="info-item">
+              <span class="material-symbols-outlined icon">work</span>
+              <div>
+                <strong>Department:</strong>
+                @if (!enableEdit) {
+                  <p>{{ user.department }}</p>
+                }
+                @if (enableEdit) {
+                  <input type="text" [(ngModel)]="user.department">
+                }
+              </div>
+            </div>
+          </div>
+        </section>
+      </aside>
+    </main>
   }
 
   @if (error) {
-    <div>{{ error }}</div>
+    <div class="error-message">{{ error }}</div>
   }
+</div>

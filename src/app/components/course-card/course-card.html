@@ -1,0 +1,24 @@
+<div class="course-card">
+<img 
+  class="course-image"
+  [src]="course.courseimage ? (course.courseimage + '?token=' + token) : 'images/course.jpg'"
+  alt="{{course.fullname}}"
+  (error)="onImageError($event)"
+/>
+
+  <div class="course-content">
+    <h2>{{course.fullname}}</h2>
+    <p 
+      matTooltip="{{ course.summary | stripHtml }}" 
+      matTooltipClass="custom-tooltip"
+      matTooltipPosition="above"
+      matTooltipShowDelay="300"
+    >
+    {{getTrimmedSummary(course.summary)}}</p>
+
+    <div class="actions">
+      <button class="open-btn" (click)="open.emit(course)">Open</button>
+      <button class="cart-btn" *ngIf="mode === 'all'" (click)="addToCart.emit(course)">Add to Cart</button>
+    </div>
+  </div>
+</div>

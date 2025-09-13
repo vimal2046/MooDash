@@ -1,0 +1,21 @@
+<h1>All Courses</h1>
+
+@if (loading) {
+    <p>Loading...</p>
+}@else if (error) {
+    <p>{{error}}</p>
+}@else{
+
+    <div class="course-grid">
+        @for (c of courses; track c.id) {
+            <app-course-card
+                [course]="c"
+                [token]="token"
+                mode="all"
+                (open)="onOpen($event)"
+                (addToCart)="onAddToCart($event)">
+
+            </app-course-card>
+        }
+    </div>
+}

@@ -1,5 +1,5 @@
 <div class="profile-page-container">
-
+<form *ngIf="profileForm" [formGroup]="profileForm" (ngSubmit)="updateProfile()">
   @if (loading) {
     <div class="skeleton-loader">
       <div class="skeleton-hero">
@@ -34,10 +34,17 @@
         <p class="username">@{{ user.username }}</p>
         <span class="user-id">ID: {{ user.id }}</span>
       </div>
-          <button class="edit-profile-btn" (click)="toggleEdit()">
+          <button type="button" class="edit-profile-btn" (click)="toggleEdit()">
       <span class="material-symbols-outlined">edit</span>
       {{ enableEdit ? 'Cancel' : 'Edit Profile' }}
     </button>
+
+          @if (enableEdit) {
+          <button class="save-profile-btn" type="submit">
+            <span class="material-symbols-outlined" >save</span>
+            Save Changes
+          </button>
+        }
 
     </header>
 
@@ -51,7 +58,10 @@
          <div class="description" [innerHTML]="user.description || 'No description provided.'"></div>
           }
           @if (enableEdit) {
-            <input type="text" [(ngModel)]="user.description">
+            <input type="text" formControlName="description">
+            <div *ngIf="profileForm.get('description')?.touched && profileForm.get('description')?.invalid">
+                    <small class="error">Field must not to be Empty</small>
+            </div>
           }
           @if (user.interests) {
             <h3>Interests</h3>
@@ -110,7 +120,10 @@
                 <p>{{ user.email }}</p>
                 }
                 @if (enableEdit){
-                  <input type="email" [(ngModel)] = "user.email"/>
+                  <input type="email" formControlName="email" appInvalidHighlight />
+                  <div *ngIf="profileForm.get('email')?.touched && profileForm.get('email')?.invalid">
+                    <small class="error">Enter a valid email</small>
+                  </div>
                 }
               </div>
             </div>
@@ -122,7 +135,10 @@
                   <p>{{ user.phone1 || 'Not Provided' }}</p>
                 }
                 @if(enableEdit){
-                  <input type="number" [(ngModel)]="user.phone1"/>
+                  <input type="number" formControlName="phone1" appInvalidHighlight/>
+                  <div *ngIf="profileForm.get('phone1')?.touched && profileForm.get('phone1')?.invalid">
+                  <small class="error">Phone must be 10 digits</small>
+                     </div>
                 }
                 
               </div>
@@ -136,7 +152,10 @@
                 <p>{{ user.phone2 || 'Not Provided' }}</p>
                 }
                 @if(enableEdit){
-                  <input type="number" [(ngModel)]="user.phone2">
+                  <input type="number" formControlName="phone2"/>
+                  <div *ngIf="profileForm.get('phone2')?.touched && profileForm.get('phone2')?.invalid">
+                    <small class="error">Phone Must be 10 Digits</small>
+                  </div>
                 }
               </div>
             </div>
@@ -144,26 +163,36 @@
               <span class="material-symbols-outlined icon">home</span>
               <div>
                 <strong>Address:</strong>
-                <p>{{ user.address }}, {{ user.city }}, {{ user.country }}</p>
+                <!-- <p>{{ user.address }}, {{ user.city }}, {{ user.country }}</p> -->
                 @if (!enableEdit) {
                   <p>{{user.address}}</p>
                 }
                 @if (enableEdit) {
-                  <input type="text" [(ngModel)]="user.address">
+
+                  <input type="text" formControlName="address">
+                  <div *ngIf="profileForm.get('address')?.touched && profileForm.get('address')?.invalid">
+                    <small class="error">Field must not to be Empty</small>
+                  </div>
                 }
                 <strong>City:</strong>
                 @if (!enableEdit) {
                   <p>{{user.city}}</p>
                 }
                 @if (enableEdit) {
-                  <input type="text" [(ngModel)]="user.city">
+                  <input type="text" formControlName="city">
+                    <div *ngIf="profileForm.get('city')?.touched && profileForm.get('city')?.invalid">
+                    <small class="error">Field must not to be Empty</small>
+                  </div>
                 }
                 <strong>Country:</strong>
                 @if (!enableEdit) {
                   <p>{{user.country}}</p>
                 }
                 @if (enableEdit) {
-                  <input type="text" [(ngModel)]="user.country">
+                  <input type="text" formControlName="country">
+                  <div *ngIf="profileForm.get('country')?.touched && profileForm.get('country')?.invalid">
+                    <small class="error">Field must not to be Empty</small>
+                  </div>
                 }
                 
 
@@ -183,7 +212,10 @@
                    <p>{{ user.institution }}</p>
                 }
                 @if (enableEdit) {
-                  <input type="text" [(ngModel)]="user.institution">
+                  <input type="text" formControlName="institution">
+                  <div *ngIf="profileForm.get('institution')?.touched && profileForm.get('institution')?.invalid">
+                    <small class="error">Field must not to be Empty</small>
+                  </div>
                 }
                
               </div>
@@ -196,12 +228,18 @@
                   <p>{{ user.department }}</p>
                 }
                 @if (enableEdit) {
-                  <input type="text" [(ngModel)]="user.department">
+                  <input type="text" formControlName="department">
+                  <div *ngIf="profileForm.get('department')?.touched && profileForm.get('department')?.invalid">
+                    <small class="error">Field must not to be Empty</small>
+                  </div>
                 }
               </div>
             </div>
+     
+
           </div>
         </section>
+
       </aside>
     </main>
   }
@@ -209,4 +247,5 @@
   @if (error) {
     <div class="error-message">{{ error }}</div>
   }
+  </form>
 </div>

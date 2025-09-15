@@ -4,31 +4,40 @@ import { Moodle } from '../../services/moodle';
 import { User } from '../../services/user';
 import { CourseCard } from '../../components/course-card/course-card';
 import { Spinner } from '../../shared/spinner/spinner';
+import { CourseHeaderControls } from '../../shared/course-header-controls/course-header-controls';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-courses',
-  imports: [CommonModule,CourseCard,Spinner],
+  standalone: true,
+  imports: [
+    CommonModule,
+    CourseCard,
+    Spinner,
+    CourseHeaderControls,
+    MatProgressSpinnerModule
+  ],
   templateUrl: './courses.html',
-  styleUrl: './courses.scss'
+  styleUrls: ['./courses.scss']
 })
 export class Courses implements OnInit {
   private moodle = inject(Moodle);
-  token = 'ebefc8da31d60e88355709ecd3f7fafb';
-  courses: any[] = [];
-  loading = true;
-  error = '';
-//Injected User to constructor
   constructor(private userService: User) {}
 
-  //ngOnInit() runs once
+  courses: any[] = [];
+  filteredCourses: any[] = [];
+  loading = true;
+  error = '';
+
+  private searchTerm = '';
+  private sortBy = 'relevance';
+
   ngOnInit() {
-    // Fetch immediately if a userId already exists
     const currentUserId = this.userService.getUserId();
     if (currentUserId) {
       this.loadCourses(currentUserId);
     }
 
-    // Subscribe to userId changes for future updates
     this.userService.userId$.subscribe(userId => {
       if (userId) {
         this.loadCourses(userId);
@@ -37,13 +46,13 @@ export class Courses implements OnInit {
   }
 
   private loadCourses(userId: number) {
-    this.courses = [];
     this.loading = true;
     this.error = '';
 
     this.moodle.getUserCourses(userId).subscribe({
       next: (data) => {
         this.courses = data;
+        this.applyFilters();   // 👈 filter immediately
         this.loading = false;
       },
       error: (err) => {
@@ -54,30 +63,45 @@ export class Courses implements OnInit {
     });
   }
 
-  // onImageError(event: Event) {
-  //   const target = event.target as HTMLImageElement;
-  //   target.src = 'images/course.jpg';
-  // }
+  onSearch(term: string) {
+    this.searchTerm = term || '';
+    this.applyFilters();
+  }
 
-  // // For trimming the summary until first full stop
-  // getTrimmedSummary(summary: string): string {
-  //   if (!summary) return "No description available.";
+  onSortChange(sortValue: string) {
+    this.sortBy = sortValue || 'relevance';
+    this.applyFilters();
+  }
 
-  //   // Strip HTML tags first
-  //   const plainText = summary.replace(/<[^>]+>/g, '');
+  private applyFilters() {
+    const term = this.searchTerm.toLowerCase().trim();
 
-  //   // Find the first full stop
-  //   const firstStopIndex = plainText.indexOf('.');
-  //   if (firstStopIndex !== -1) {
-  //     return plainText.substring(0, firstStopIndex + 1);
-  //   }
+    let list = this.courses.filter(c => {
+      const title = (c.fullname || '').toLowerCase();
+      const summary = (c.summary || '').replace(/<[^>]+>/g, '').toLowerCase();
+      return !term || title.includes(term) || summary.includes(term);
+    });
 
-  //   // If no full stop, return the whole summary
-  //   return plainText;
-  // }
+    switch (this.sortBy) {
+      case 'newest':
+        list.sort((a, b) => (b.startdate || b.timecreated || 0) - (a.startdate || a.timecreated || 0));
+        break;
+      case 'oldest':
+        list.sort((a, b) => (a.startdate || a.timecreated || 0) - (b.startdate || b.timecreated || 0));
+        break;
+      case 'az':
+        list.sort((a, b) => (a.fullname || '').localeCompare(b.fullname || ''));
+        break;
+      case 'za':
+        list.sort((a, b) => (b.fullname || '').localeCompare(a.fullname || ''));
+        break;
+    }
 
-  onOpen(course: any){
+    this.filteredCourses = list;
+  }
+
+  onOpen(course: any) {
     console.log("Open course", course);
-    //TODO : navigate to course detail page
+    // TODO : navigate to course detail page
   }
 }

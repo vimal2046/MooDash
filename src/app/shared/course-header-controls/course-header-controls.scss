@@ -1,0 +1,16 @@
+.header-controls {
+  display: flex;
+  gap: 12px;
+  margin-top: 20px;
+  margin-right: 10%;
+  align-items: center;
+}
+
+.search-field {
+ min-width: 250px;
+ max-width: 300px;
+}
+
+.sort-field {
+  width: 200px;
+}

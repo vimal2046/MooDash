@@ -1,13 +1,25 @@
-<h1>All Courses</h1>
+<div class="page-header">
+  <h1 class="page-title">All Courses</h1>
+
+  <div class="header-actions">
+    <app-course-header-controls
+      (searchChanged)="onSearch($event)"
+      (sortChanged)="onSortChange($event)">
+    </app-course-header-controls>
+  </div>
+</div>
 
 @if (loading) {
     <p>Loading...</p>
 }@else if (error) {
     <p>{{error}}</p>
-}@else{
+}@else if (filteredCourses.length === 0) {
+  <p class="no-results">No courses found matching your search.</p>
+}
+@else{
 
     <div class="course-grid">
-        @for (c of courses; track c.id) {
+        @for (c of filteredCourses; track c.id) {
             <app-course-card
                 [course]="c"
                 [token]="token"

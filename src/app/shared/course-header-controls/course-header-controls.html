@@ -1,0 +1,30 @@
+<div class="header-controls">
+  <mat-form-field appearance="outline" class="search-field">
+    <mat-label>Search courses</mat-label>
+    <input
+      matInput
+      [formControl]="searchControl"
+      placeholder="Search by title or description"
+    />
+    <button
+      *ngIf="searchControl.value"
+      matSuffix
+      mat-icon-button
+      (click)="clearSearch()"
+    >
+      <mat-icon>close</mat-icon>
+    </button>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="sort-field">
+    <mat-label>Sort</mat-label>
+    <mat-select
+      [value]="initialSort"
+      (selectionChange)="onSortChange($event.value)"
+    >
+      <mat-option *ngFor="let o of sortOptions" [value]="o.value">
+        {{ o.label }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+</div>

@@ -3,6 +3,10 @@ import { appConfig } from './app/app.config';
 import { App } from './app/app';
 import { inject } from '@vercel/analytics';
 import { enableProdMode, isDevMode } from '@angular/core';
+import { injectSpeedInsights } from '@vercel/speed-insights';
+
+
+injectSpeedInsights();
  
 if (!isDevMode()) {
   enableProdMode();
